@@ -29,7 +29,7 @@ def choose_action(state,q_table):
     return action_name
 
 def get_env_feedback(state_now,action_now):
-    reward = 0
+    reward = -0.1
     end = False
     state_next = state_now
 
@@ -98,7 +98,7 @@ def rl():
                 q_target = R
 
             q_table.loc[S, A] += ALPHA * (q_target - q_predict)
-            print('Qtable[%s,%s] : %s' % (S,A,q_table.loc[S, A]))
+            print('Reward : %s Qtable[%s,%s] : %s' % (R,S,A,q_table.loc[S, A]))
             S = S_
 
             update_env(S, episode, step_counter+1)
