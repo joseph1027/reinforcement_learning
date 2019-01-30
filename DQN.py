@@ -17,10 +17,6 @@ class maze:
 
 	def reset(self):
 		pass
-		#self.state_now = 0
-		#self.state_next =0
-		#return self.state_now
-
 
 	def update_env(self,S,episode,step_counter):
 		env_list = ((['-']*(self.WIDTH-1)+['-\n'])*(self.LENGTH-1))+(['-']*(self.WIDTH-1) + ['T\n'])
@@ -44,12 +40,6 @@ class maze:
 		reward = -0.1
 		end = False
 		#state_next = self.state_now
-		print('get_env')
-		print(state_now)
-		print(self.WIDTH)
-		print(state_now/self.WIDTH)
-		print(int(state_now/self.WIDTH))
-		#input()
 		if action_now == 'right':
 			if((state_now % self.WIDTH) == (self.WIDTH-1)):
 				state_next = state_now
@@ -76,7 +66,7 @@ class maze:
 		#	reward = -1.0
 		#	end = True
 
-		print(state_now,action_now,state_next)
+		#print(state_now,action_now,state_next)
 		if(state_next == self.TARGET):
 			reward = 1.0
 			end = True 
@@ -91,7 +81,7 @@ class DeepQNetwork:
 		self,
 		n_actions,
 		n_features,
-		learning_rate=0.1,
+		learning_rate=0.01,
 		reward_decay=0.9,
 		e_greedy=0.9,
 		replace_target_iter=300,
