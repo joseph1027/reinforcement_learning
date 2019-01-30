@@ -8,18 +8,18 @@ features = 1
 
 class maze:
 	def __init__(self):
-		self.state_now = 0
-		self.state_next = 0
+		#self.state_now = 0
+		#self.state_next = 0
 		self.WIDTH = 4
 		self.LENGTH = 4
 		self.TARGET = 15
 		self.FRESH_TIME = 0.1
 
 	def reset(self):
-		self.state_now = 0
-		self.state_next =0
-
-		return self.state_now
+		pass
+		#self.state_now = 0
+		#self.state_next =0
+		#return self.state_now
 
 
 	def update_env(self,S,episode,step_counter):
@@ -39,48 +39,48 @@ class maze:
 			time.sleep(self.FRESH_TIME)
 
 
-	def get_env_feedback(self,action_idx):
+	def get_env_feedback(self,state_now,action_idx):
 		action_now = actions[action_idx]
-		reward = 0.0
+		reward = -0.1
 		end = False
 		#state_next = self.state_now
 		print('get_env')
-		print(self.state_now)
+		print(state_now)
 		print(self.WIDTH)
-		print(self.state_now/self.WIDTH)
-		print(int(self.state_now/self.WIDTH))
-		input()
+		print(state_now/self.WIDTH)
+		print(int(state_now/self.WIDTH))
+		#input()
 		if action_now == 'right':
-			if((self.state_now % self.WIDTH) == (self.WIDTH-1)):
-				self.state_next = self.state_now
+			if((state_now % self.WIDTH) == (self.WIDTH-1)):
+				state_next = state_now
 			else:
-				self.state_next = self.state_now +1
+				state_next = state_now +1
 		elif action_now == 'left':
-			if((self.state_now % self.WIDTH) == 0):
-				self.state_next = self.state_now
+			if((state_now % self.WIDTH) == 0):
+				state_next = state_now
 			else:
-				self.state_next = self.state_now -1
+				state_next = state_now -1
 		elif action_now == 'up':
-			if(int(self.state_now/self.WIDTH) == 0):
-				self.state_next = self.state_now
+			if(int(state_now/self.WIDTH) == 0):
+				state_next = state_now
 			else:
-				self.state_next = self.state_now -self.WIDTH
+				state_next = state_now -self.WIDTH
 		elif action_now == 'down':
-			if(int(self.state_now/self.WIDTH) == (self.LENGTH-1)):
-				self.state_next = self.state_now
+			if(int(state_now/self.WIDTH) == (self.LENGTH-1)):
+				state_next = state_now
 			else:
-				self.state_next = self.state_now + self.WIDTH
+				state_next = state_now + self.WIDTH
 
 		#if self.state_next <=89 and self.state_next>=81 :
 		#	self.state_next = self.state_now
 		#	reward = -1.0
 		#	end = True
 
-		print(self.state_now,action_now,self.state_next)
-		if(self.state_next == self.TARGET):
+		print(state_now,action_now,state_next)
+		if(state_next == self.TARGET):
 			reward = 1.0
 			end = True 
-		return self.state_next,reward,end
+		return state_next,reward,end
 
 
 
@@ -220,10 +220,10 @@ def run_maze():
 	step = 0
 	for episode in range(300):
 		step_counter = 0
-		observation = my_maze.reset()
+		observation = 0 #= my_maze.reset()
 		while True:
 			now_action = DQN.choose_action(observation)
-			observation_, reward, done = my_maze.get_env_feedback(now_action)
+			observation_, reward, done = my_maze.get_env_feedback(observation,now_action)
 			DQN.store_transition(observation,now_action,reward,observation_)
 			if (step>200) and (step%5==0) :
 				DQN.learn()
@@ -231,10 +231,11 @@ def run_maze():
 			print(actions[now_action],observation,observation_,reward)
 
 			observation = observation_
+			step_counter +=1
 			my_maze.update_env(observation,episode,step_counter)
 			
 			step += 1
-			step_counter +=1
+			
 
 			if done:
 				break
